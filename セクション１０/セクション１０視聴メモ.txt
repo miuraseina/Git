@@ -1,0 +1,105 @@
+スタッシュ(隠す)で作業を一時避難
+
+git stash
+git stash save
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git st
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   home.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git stash
+Saved working directory and index state WIP on master: 2ab2d4d feature2を新規追加
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git st
+On branch master
+nothing to commit, working tree clean
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+
+
+避難させた作業を確認
+git stash list
+
+
+$ git stash list
+stash@{0}: WIP on master: 2ab2d4d feature2を新規追加
+
+
+避難させた作業を復元
+
+git stash apply
+ステージごと復元
+git stash apply --index
+
+特定の作業を復元
+git stash apply [スタッシュ名]
+
+66
+避難させた作業を削除
+
+最新の作業を削除
+git stash drop
+
+
+特定の作業を削除
+git stash drop [スタッシュ名]
+
+すべての作業を削除
+git stash clear
+
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git st
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   home.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git stash
+Saved working directory and index state WIP on master: 2ab2d4d feature2を新規追加
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git st
+On branch master
+nothing to commit, working tree clean
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git stash drop
+Dropped refs/stash@{0} (1ceb13710b381dff383f96e434eb59a2616e65de)
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git stash list
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

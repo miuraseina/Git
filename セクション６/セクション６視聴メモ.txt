@@ -1,0 +1,289 @@
+41　ブランチとマージ
+
+マージ：ほかの人が開発した変更を自分のところに取り込む
+
+
+ブランチ：並行して複数機能を開発するためにある
+自分の開発にほかの人の変更が影響を与えなくなる
+
+
+42
+ブランチの仕組み：コミットファイルを指し示すポインタ
+
+コミットとはスナップショット。時系列順に連なり、たどれる
+
+HEAD：いまじぶんが作業しているブランチを指し示すポインタ　ref:<ブランチ名>
+
+今いるブランチでコミットすると最新のコミットファイルにつながる
+
+開発の分岐
+ブランチ：コミットファイルのファイル名、コミットID
+
+
+gitではブランチの切り替え＝スナップショットポインタの切り替え
+
+43
+新しいブランチを作る
+git branch <ブランチ名>
+
+ブランチの一覧表示
+git branch
+git branch -a
+
+PS C:\sadopj_workspace\Git\git_tutorial> git branch
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git branch feature
+PS C:\sadopj_workspace\Git\git_tutorial> git branch        
+  feature
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git log --oneline --decorate
+50fcafa (HEAD -> master, origin/master, origin/HEAD, feature) Update home.html
+427ed78 Add home.html with a home paragraph
+917ec85 git ci --amendを追加
+f808b3c .gitignoreファイルを追加
+fa564b3 コマンド省略おためし
+b83ce9a git diffを追記
+22d2dea git statusコマンドを追記
+1153a53 initial commit
+
+44 
+ブランチの切り替え
+git co <既存ブランチ名>
+git co feature
+
+
+git co -b <新ブランチ名>
+
+PS C:\sadopj_workspace\Git\git_tutorial> git co master
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git branch    
+  feature
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     13:51             10 .gitignore
+-a----        2026/04/14     14:50             30 home.html
+-a----        2026/04/14     14:18             92 index.html
+-a----        2026/04/14     13:49              0 secret.txt
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git st
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        master.html
+
+nothing added to commit but untracked files present (use "git add" to track)
+PS C:\sadopj_workspace\Git\git_tutorial> git add .    
+PS C:\sadopj_workspace\Git\git_tutorial> git ci       
+[master 3b2d652] master.htmlファイルを新規追加
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 master.html
+PS C:\sadopj_workspace\Git\git_tutorial> git push origin master
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 318 bytes | 318.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/miuraseina/git_tutorial.git
+   50fcafa..3b2d652  master -> master
+PS C:\sadopj_workspace\Git\git_tutorial> git co feature
+error: Your local changes to the following files would be overwritten by checkout:
+        master.html
+Please commit your changes or stash them before you switch branches.
+Aborting
+PS C:\sadopj_workspace\Git\git_tutorial> git push origin feature
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 399 bytes | 399.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: 
+remote: Create a pull request for 'feature' on GitHub by visiting:
+remote:      https://github.com/miuraseina/git_tutorial/pull/new/feature
+remote:
+To https://github.com/miuraseina/git_tutorial.git
+ * [new branch]      feature -> feature
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     13:51             10 .gitignore
+-a----        2026/04/14     14:50             30 home.html
+-a----        2026/04/14     14:18             92 index.html
+-a----        2026/04/15     10:28             13 master.html
+-a----        2026/04/14     13:49              0 secret.txt
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git branch
+  feature
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git co feature
+error: Your local changes to the following files would be overwritten by checkout:
+        master.html
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout feature
+error: Your local changes to the following files would be overwritten by checkoutPS C:\sadopj_workspace\Git\git_tutorial> git checkout feature
+error: Your local changes to the following files would be overwritten by checkout:
+        master.html
+Please commit your changes or stash them before you switch branches.
+Aborting
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout master
+M       master.html
+Already on 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout feature
+error: Your local changes to the following files would be overwritten by checkout:
+        master.html
+Please commit your changes or stash them before you switch branches.
+Aborting
+PS C:\sadopj_workspace\Git\git_tutorial> git st              
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   master.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\sadopj_workspace\Git\git_tutorial> git add .
+PS C:\sadopj_workspace\Git\git_tutorial> git ci   
+[master 1b75a32] master.htmlを新規追加
+ 1 file changed, 1 insertion(+)
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout feature
+Switched to branch 'feature'
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     13:51             10 .gitignore
+-a----        2026/04/15     10:35             13 feature.html
+-a----        2026/04/14     14:50             30 home.html
+-a----        2026/04/14     14:18             92 index.html
+-a----        2026/04/14     13:49              0 secret.txt
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout master
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+45
+変更をマージ
+git merge <ブランチ名>
+git merge <リモート名/ブランチ名>
+git merge origin/master
+
+mergeには３種類ある
+
+・Fast Foward：早送りマージ、ブランチのポインタを増やす
+・Auto Merge：基本的なマージ　新しくコミットを作ってそこに統合
+・
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> cat feature.html
+<p>branch</p>
+<p>feature</p>
+PS C:\sadopj_workspace\Git\git_tutorial> git log --oneline
+ba79fe4 (HEAD -> master) Merge branch 'feature'
+831b02b (feature) featureを追記
+6efe282 Merge branch 'master' of https://github.com/miuraseina/git_tutorial
+037b331 (origin/master, origin/HEAD) git merge を追記
+1b75a32 master.htmlを新規追加
+3b2d652 master.htmlファイルを新規追加
+65c8192 (origin/feature) feature.htmlファイルを新規追加
+50fcafa Update home.html
+427ed78 Add home.html with a home paragraph
+917ec85 git ci --amendを追加
+f808b3c .gitignoreファイルを追加
+fa564b3 コマンド省略おためし
+b83ce9a git diffを追記
+22d2dea git statusコマンドを追記
+1153a53 initial commit
+
+
+46
+コンフリクト：同じファイルの行に対して異なる編集を行いマージすると
+どちらの変更を優先するのかわからなくなる
+
+解決法
+ファイルを書き換える
+
+47 
+コンフリクトを起こさない
+・複数人で同じファイルを変更しない
+・pullやmergeする前に変更中の状態をなくしておく
+・pullするときは、pullブランチに移動してからpullする
+・慌てない
+
+48
+ブランチ名の変更
+git branch -m <ブランチ名>
+
+
+削除
+git branch -d <ブランチ名>
+強制削除
+git branch -D <ブランチ名>
+
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git co feature
+Switched to branch 'feature'
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -m new_branch
+PS C:\sadopj_workspace\Git\git_tutorial> git branch    
+  master
+* new_branch
+PS C:\sadopj_workspace\Git\git_tutorial> git co master 
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -d new_feature
+error: branch 'new_feature' not found
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -d new_branch 
+Deleted branch new_branch (was 5b41f5a).
+PS C:\sadopj_workspace\Git\git_tutorial> git branch               
+* master
+
+49
+ブランチの利用
+開発する際は最新マスターからトピックごとにブランチを切ってそこに開発していく
+
+50
+リモートブランチ
+
+<リモート名>/<ブランチ名>でリモートブランチを参照
+
+PS C:\sadopj_workspace\Git\git_tutorial> git fetch
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/feature
+  remotes/origin/master
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

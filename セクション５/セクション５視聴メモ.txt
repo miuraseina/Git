@@ -1,0 +1,235 @@
+34 リモート情報の確認
+リモート表示
+git remote
+
+URLを表示
+git remote -v
+
+PS C:\sadopj_workspace\Git\git_tutorial> git remote
+origin
+PS C:\sadopj_workspace\Git\git_tutorial> git remote -v
+origin  https://github.com/miuraseina/git_tutorial.git (fetch)
+origin  https://github.com/miuraseina/git_tutorial.git (push)
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+
+35
+リモートリポジトリは複数登録可能
+
+git remote add <リモート名> <リモートURL>
+git remote add tutorial <URL>
+
+https://github.com/miuraseina/git_tutorial_bak.git
+
+PS C:\sadopj_workspace\Git\git_tutorial> git remote add bak https://github.com/miuraseina/git_tutorial_bak.git
+PS C:\sadopj_workspace\Git\git_tutorial> git remote                                                           
+bak
+origin
+PS C:\sadopj_workspace\Git\git_tutorial> git remote -v
+bak     https://github.com/miuraseina/git_tutorial_bak.git (fetch)
+bak     https://github.com/miuraseina/git_tutorial_bak.git (push)
+origin  https://github.com/miuraseina/git_tutorial.git (fetch)
+origin  https://github.com/miuraseina/git_tutorial.git (push)
+PS C:\sadopj_workspace\Git\git_tutorial> git push -u bak master
+Enumerating objects: 17, done.
+Counting objects: 100% (17/17), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (11/11), done.
+Writing objects: 100% (17/17), 1.60 KiB | 409.00 KiB/s, done.
+Total 17 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), done.
+To https://github.com/miuraseina/git_tutorial_bak.git
+ * [new branch]      master -> master
+branch 'master' set up to track 'bak/master'.
+PS C:\sadopj_workspace\Git\git_tutorial> 
+
+
+36
+リモートから情報を取得
+やり方：フェッチ
+
+git fetch <リモート名>
+
+リモートリポジトリからローカルリポジトリに情報を落とす
+
+ローカルリポジトリからワークツリーに落とす
+
+git merge
+
+１：リモートリポジトリの内容を最新のものに更新する
+
+PS C:\sadopj_workspace\Git\git_tutorial> git fetch origin
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 978 bytes | 81.00 KiB/s, done.
+From https://github.com/miuraseina/git_tutorial
+   917ec85..427ed78  master     -> origin/master
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -a
+* master
+  remotes/bak/master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+PS C:\sadopj_workspace\Git\git_tutorial> git co remotes/origin/master
+Note: switching to 'remotes/origin/master'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 427ed78 Add home.html with a home paragraph
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     13:51             10 .gitignore
+-a----        2026/04/14     14:40             13 home.html
+-a----        2026/04/14     14:18             92 index.html
+-a----        2026/04/14     13:49              0 secret.txt
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> cat home.html
+<p>home</p>
+
+
+37
+プル：リモートから情報取得や、マージまでを一度にやりたいとき
+git pull origin master
+
+git pull
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git merge origin/master
+Updating 917ec85..427ed78
+Fast-forward
+ home.html | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 home.html
+PS C:\sadopj_workspace\Git\git_tutorial> git pull
+Already up to date.
+
+Options related to merging
+    -r, --[no-]rebase[=(false|true|merges|interactive)]
+                          incorporate changes by rebasing rather than merging
+    -n                    do not show a diffstat at the end of the merge
+    --[no-]stat           show a diffstat at the end of the merge
+    --[no-]compact-summary
+                          show a compact-summary at the end of the merge
+    --[no-]log[=<n>]      add (at most <n>) entries from shortlog to merge commit message
+    --[no-]signoff[=...]  add a Signed-off-by trailer
+    --[no-]squash         create a single commit instead of doing a merge
+    --[no-]commit         perform a commit if the merge succeeds (default)
+    --[no-]edit           edit message before committing
+    --[no-]cleanup <mode> how to strip spaces and #comments from message
+    --[no-]ff             allow fast-forward
+    --ff-only             abort if fast-forward is not possible
+    --[no-]verify         control use of pre-merge-commit and commit-msg hooks
+    --[no-]verify-signatures
+                          verify that the named commit has a valid GPG signature
+    --[no-]autostash      automatically stash/stash pop before and after
+    -s, --[no-]strategy <strategy>
+                          merge strategy to use
+    -X, --[no-]strategy-option <option=value>
+                          option for selected merge strategy
+    -S, --[no-]gpg-sign[=<key-id>]
+                          GPG sign commit
+    --[no-]allow-unrelated-histories
+                          allow merging unrelated histories
+
+Options related to fetching
+    --[no-]all            fetch from all remotes
+    -a, --[no-]append     append to .git/FETCH_HEAD instead of overwriting
+    --[no-]upload-pack <path>
+                          path to upload pack on remote end
+    -f, --[no-]force      force overwrite of local branch
+    -t, --[no-]tags       fetch all tags and associated objects
+    -p, --[no-]prune      prune remote-tracking branches no longer on remote
+    -j, --[no-]jobs[=<n>] number of submodules pulled in parallel
+    --[no-]dry-run        dry run
+    -k, --[no-]keep       keep downloaded pack
+    --[no-]depth <depth>  deepen history of shallow clone
+    --[no-]shallow-since <time>
+                          deepen history of shallow repository based on time
+    --[no-]shallow-exclude <ref>
+                          deepen history of shallow clone, excluding ref
+    --[no-]deepen <n>     deepen history of shallow clone
+    --unshallow           convert to a complete repository
+    --[no-]update-shallow accept refs that update .git/shallow
+    --refmap <refmap>     specify fetch refmap
+    -o, --[no-]server-option <server-specific>
+                          option to transmit
+    -4, --[no-]ipv4       use IPv4 addresses only
+    -6, --[no-]ipv6       use IPv6 addresses only
+    --[no-]negotiation-tip <revision>
+                          report that we have only objects reachable from this object
+    --[no-]show-forced-updates
+                          check for forced-updates on all updated branches
+    --[no-]set-upstream   set upstream for git pull/fetch
+
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     13:51             10 .gitignore
+-a----        2026/04/14     14:50             30 home.html
+-a----        2026/04/14     14:18             92 index.html
+-a----        2026/04/14     13:49              0 secret.txt
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> cat home.html
+<p>home</p>
+<p>git pull</p>
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+38
+git pull　は今自分がいるブランチにほかのブランチの情報をマージできてしまう
+
+
+39
+git remote show origin
+
+PS C:\sadopj_workspace\Git\git_tutorial> git remote show origin
+* remote origin
+  Fetch URL: https://github.com/miuraseina/git_tutorial.git
+  Push  URL: https://github.com/miuraseina/git_tutorial.git
+  HEAD branch: master
+  Remote branch:
+    master tracked
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+
+40　
+リモート名の変更
+git remote rename <旧リモート名> <新リモート名>
+git remote rename　tutorial new_tutorial
+
+リモート名の削除
+git remote rm <リモート名>
+
+
+
+
+
+

@@ -1,0 +1,81 @@
+60
+タグ：コミットを参照しやすいようにわかりましたやすい名前を付ける
+タグ一覧を表示
+git tag
+パターンを指定
+
+61
+タグ作成コマンド
+注釈付き版(annotated,正式)
+git tag -a [タグ名] -m"[メッセージ]"
+
+軽量版(lightweight)
+git tag [タグ名]
+
+後付けも可
+git tag [タグ名] [コミット名]
+
+タグデータの表示
+git show [タグ名]
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git tag -a "20260415" -m "version 20260415"
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git tag
+20260415
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git show 20260415
+tag 20260415
+Tagger: miuraseina <s.miura@miracleave.co.jp>
+Date:   Wed Apr 15 14:05:42 2026 +0900
+
+version 20260415
+
+commit 2ab2d4df08be4d7730be6831008b8515de2673d0 (HEAD -> master, tag: 20260415, origin/master, origin/HEAD)
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Wed Apr 15 12:08:11 2026 +0900
+
+    feature2を新規追加
+
+diff --git a/feature2.html b/feature2.html
+new file mode 100644
+index 0000000..060a5d4
+--- /dev/null
++++ b/feature2.html
+@@ -0,0 +1 @@
++<p>feature2</p>
+\ No newline at end of file
+
+
+62
+タグをリモートに送信するにはgit push コマンドで別途送信
+
+git push origin [タグ名]
+
+タグを一斉に送信
+git push origin --tags
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

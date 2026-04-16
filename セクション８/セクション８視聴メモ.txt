@@ -1,0 +1,306 @@
+54
+リベース：変更を統合する際に、履歴をきれいに整えるために使う
+
+git rebase <ブランチ名>
+
+ブランチの基点となるコミットを別のコミットに移動
+その際履歴は直線状にきれいになる
+
+流れ
+移動させたいブランチからするところのブランチにリベース
+リベースされたブランチに入り、ブランチをマージ
+
+リベースとマージの違い
+リベース
+・新コミットはつくられない
+・履歴が直線状
+マージ
+・新コミットが作られる
+・履歴が枝分かれ
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git branch feature
+PS C:\sadopj_workspace\Git\git_tutorial> git branch
+  feature
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git co feature
+Switched to branch 'feature'
+PS C:\sadopj_workspace\Git\git_tutorial> git co master
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git add .    
+PS C:\sadopj_workspace\Git\git_tutorial> git ci   
+[master ff7b5ef] master2を新規追加
+ 1 file changed, 1 insertion(+)
+ create mode 100644 master2.html
+PS C:\sadopj_workspace\Git\git_tutorial> git co feature
+Switched to branch 'feature'
+PS C:\sadopj_workspace\Git\git_tutorial> git add .     
+PS C:\sadopj_workspace\Git\git_tutorial> git ci        
+[feature 341e631] feature2を新規追加
+ 1 file changed, 1 insertion(+)
+ create mode 100644 feature2.html
+PS C:\sadopj_workspace\Git\git_tutorial> git rebase master
+Successfully rebased and updated refs/heads/feature.
+PS C:\sadopj_workspace\Git\git_tutorial> git log  
+commit 2ab2d4df08be4d7730be6831008b8515de2673d0 (HEAD -> feature)
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Wed Apr 15 12:08:11 2026 +0900
+
+    feature2を新規追加
+
+commit ff7b5ef5d431c9e6398aad1fc92e1916d8cfc696 (master)
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Wed Apr 15 12:07:09 2026 +0900
+
+    master2を新規追加
+
+commit 6e364df3aa548b445909b8243818d1957307adef (origin/master, origin/HEAD)
+Merge: 47827be 66cf1ca
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Wed Apr 15 11:51:18 2026 +0900
+
+    Merge pull request #2 from miuraseina/github_flow
+
+PS C:\sadopj_workspace\Git\git_tutorial> git co master 
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git merge feature
+Updating ff7b5ef..2ab2d4d
+Fast-forward
+ feature2.html | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 feature2.html
+
+fast forwardをしないようにする
+git config --global merge.ff false
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git co master 
+Switched to branch 'master'
+PS C:\sadopj_workspace\Git\git_tutorial> git merge feature
+Updating ff7b5ef..2ab2d4d
+Fast-forward
+ feature2.html | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 feature2.html
+PS C:\sadopj_workspace\Git\git_tutorial> git push origin master
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (6/6), 582 bytes | 582.00 KiB/s, done.
+Total 6 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 1 local object.
+To https://github.com/miuraseina/git_tutorial.git
+   6e364df..2ab2d4d  master -> master
+PS C:\sadopj_workspace\Git\git_tutorial> git branch            
+  feature
+* master
+PS C:\sadopj_workspace\Git\git_tutorial> git branch -d feature 
+Deleted branch feature (was 2ab2d4d).
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+55
+リベースでしてはいけないこと
+→gitにpushしたコミットをリベースすること
+
+既にpushしているコミットをリベースして再度pushはできない！
+リモートとローカルのほうでコミット履歴の情報が違う
+git側が情報を信用できなくなる
+
+git push -f　は絶対NG
+
+56
+リベースとマージの使い分け
+マージ：作業の履歴をすべて残したい人向け
+・コンフリクトの修正が簡単
+
+リベース：履歴をきれいにしたい人向け
+
+リベースは各コミットごとにコンフリクトが起こる
+
+※pushしたあと、コンフリクトしそうならマージ
+
+pullにはマージ型とリベース型がある
+
+プルのマージ型
+git pull <リモート名> <ブランチ名> 
+
+マージコミットが残る、マージした記録を残したい人向け
+
+プルのリベース型
+
+git pull --rebase <リモート名> <ブランチ名> 
+
+
+マージコミットが残らない、git内容のみ取得したい人向け
+プルをリベース型に設定
+git config --global pull.rebase ture
+マスターブランチのみで適応
+git config --global branch.master.rebase ture
+
+58
+直前のコミットをやり直す
+git ci --amend
+
+複数のコミットをやり直す
+git rebase -i <コミットID>
+git rebase -i HEAD~3
+
+-i = --interactive：対話的リベースやり取りしながら履歴を変更
+
+コミットの指定方法
+HEAD~　：～番目の親(未マージ)
+HEAD^　：マージ後の～番目の親
+
+１git rebase -iで対話的リベースモードに入る
+２：修正したいコミットをedit→そこでコミットの適用が停止
+３：git ci --amend
+４：git rebase --continue
+５：コミットの内容を適用
+
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git rebase -i HEAD~3
+Stopped at 9b457aa...  # third.htmlを新規追加
+You can amend the commit now, with
+
+  git commit --amend
+
+Once you are satisfied with your changes, run
+
+  git rebase --continue
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master|REBASE 3/3)
+$ git commit --amend
+[detached HEAD f9792a5] third.htmlを新規追加
+ Date: Wed Apr 15 13:28:23 2026 +0900
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 third.html
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master|REBASE 3/3)
+$ git rebase --continue
+Successfully rebased and updated refs/heads/master.
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git log --oneline
+f9792a5 (HEAD -> master) third.htmlを新規追加
+56b58d1 second.htmlを新規追加
+9a37369 first.htmlを新規追加
+2ab2d4d (origin/master, origin/HEAD) feature2を新規追加
+ff7b5ef master2を新規追加
+6e364df Merge pull request #2 from miuraseina/github_flow
+66cf1ca (origin/github_flow) GitHub Flowを追記
+47827be Merge pull request #1 from miuraseina/pull_request
+4f44abd (origin/pull_request) pull_requestを追記
+ff77621 Merge branch 'feature'
+5b41f5a conflictを追記
+97e430c コンフリクトを追記
+
+
+コミットを並び替え、削除
+git rebase -i HEAD~3
+で立ち上げ
+そのまま消す、並び替える
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git rebase -i HEAD~3
+Successfully rebased and updated refs/heads/master.
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git log --oneline -n 3
+8dac5eb (HEAD -> master) third.htmlを新規追加
+82a9713 first.htmlを新規追加
+ca67ceb second.htmlを新規追加
+
+コミットをまとめる
+先頭のpickからsquash
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git rebase -i HEAD~3
+[detached HEAD 3e09b0e] second.htmlを新規追加
+ Date: Wed Apr 15 13:27:44 2026 +0900
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 first.html
+ create mode 100644 second.html
+ create mode 100644 third.html
+Successfully rebased and updated refs/heads/master.
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git log --oneline -n 3
+3e09b0e (HEAD -> master) second.htmlを新規追加
+2ab2d4d (origin/master, origin/HEAD) feature2を新規追加
+ff7b5ef master2を新規追加
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ ls
+feature.html  feature2.html  first.html  home.html  index.html  master.html  master2.html  second.html  secret.txt  third.html
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+
+コミットを分割
+修正したいところをedit
+
+git reset HEAD^
+
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ ls
+feature.html  feature2.html  home.html  index.html  master.html  master2.html  secret.txt
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git pull origin master
+fatal: invalid value for 'pull.rebase': 'ture'
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git log --oneline -n 3
+2ab2d4d (HEAD -> master, origin/master, origin/HEAD) feature2を新規追加
+ff7b5ef master2を新規追加
+6e364df Merge pull request #2 from miuraseina/github_flow
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git config --global pull.rebase true~
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git config --global pull.rebase true
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git pull origin master
+From https://github.com/miuraseina/git_tutorial
+ * branch            master     -> FETCH_HEAD
+Already up to date.
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$ git log --oneline -n 3
+2ab2d4d (HEAD -> master, origin/master, origin/HEAD) feature2を新規追加
+ff7b5ef master2を新規追加
+6e364df Merge pull request #2 from miuraseina/github_flow
+
+seina_miura@PW0041 MINGW64 /c/sadopj_workspace/Git/git_tutorial (master)
+$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

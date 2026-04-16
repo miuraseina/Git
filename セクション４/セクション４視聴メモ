@@ -1,0 +1,105 @@
+31
+ファイルへの変更を元に戻す
+git checkout -- <ファイル名>
+git checkout -- <ディレクトリ名>
+
+すべて取り消し
+git checkout --
+
+ブランチの変更にも使われる
+
+裏側→ワークツリーのファイルの状態をステージに保存した状態と同じにする
+
+32
+ステージに保存したものを取り消す※ワークツリー内の変更は消さない
+
+git reset HEAD <ファイル名>
+git reset HEAD <ディレクトリ名>
+
+すべて取り消し
+git reset HEAD .
+
+裏：リポジトリで保存されている情報をステージに上書きする
+
+PS C:\sadopj_workspace\Git\git_tutorial> git add .
+PS C:\sadopj_workspace\Git\git_tutorial> git st   
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   index.html
+
+PS C:\sadopj_workspace\Git\git_tutorial> git reset HEAD index.html                          
+Unstaged changes after reset:
+M       index.html
+PS C:\sadopj_workspace\Git\git_tutorial> git st
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   index.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+33
+直前のコミットをやり直す(リモートリポジトリにプッシュする前)
+git ci --amend
+
+amend:修正
+
+リモートリポジトリにプッシュしたコミットはやり直せない
+誰かが取り込んだものを変更してプッシュすると取り込んだ人たちの状況
+も変わるから
+
+nothing to commit, working tree clean
+PS C:\sadopj_workspace\Git\git_tutorial> git add .
+PS C:\sadopj_workspace\Git\git_tutorial> git ci                   
+[master 4639d98] git ciを追加
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+PS C:\sadopj_workspace\Git\git_tutorial> git add .
+PS C:\sadopj_workspace\Git\git_tutorial> git st
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+PS C:\sadopj_workspace\Git\git_tutorial> git add .
+PS C:\sadopj_workspace\Git\git_tutorial> git st   
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   index.html
+
+PS C:\sadopj_workspace\Git\git_tutorial> git ci --amend
+[master 917ec85] git ci --amendを追加
+ Date: Tue Apr 14 14:17:50 2026 +0900
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+PS C:\sadopj_workspace\Git\git_tutorial> git log -p -n 1
+commit 917ec85251953c55f1f64f6c871ddf682606f01d (HEAD -> master)
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Tue Apr 14 14:17:50 2026 +0900
+
+    git ci --amendを追加
+
+diff --git a/index.html b/index.html
+index d78ab77..7d27e6b 100644
+--- a/index.html
++++ b/index.html
+@@ -1,3 +1,4 @@
+ <h1>gitチュートリアル</h1>
+ <p>git status</p>
+:
+
+
+
+
+

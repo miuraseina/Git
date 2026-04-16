@@ -1,0 +1,385 @@
+13
+Gitはファイルをスナップショットで記録
+
+例：3つのファイルをバージョン１として保存
+↓
+3ファイルの内  
+ファイルB→ファイルB1
+ファイルC→ファイルC1
+これをシートの差分ではなくシートのスナップショットとして　
+バージョン2に保存
+
+
+スナップショットとして保存することにより
+ブランチをマーするときの速度を上げる
+
+コミットが直前のコミットを記録しているので
+コミットをたどることで以前の状態に戻せる
+
+14
+ローカルリポジトリからスナップショットを保存し
+gitへアップロード（リモートリポジトリ）
+
+
+リポジトリ：履歴データの置き場BD
+ワークツリー：自身のPCの作業場、ファイルを変更する場
+ステージ：コミット(スナップショットの記録)を準備する場
+内容の変更を完了済みのファイル分だけを記録ステージに置くと、
+置いた分がリポジトリに記録される
+
+ローカルは３つのエリアに分かれている
+
+ワークツリー→ステージ→リポジトリ
+
+15
+データの管理方法　データ構造
+
+Gitのデータの持ち方
+新しくファイルを保存する
+１：ワークツリー→リポジトリにファイルの中身を圧縮したファイルを保存
+※実際は文字列をハッシュ関数で暗号化した文字列がファイルになる
+
+２：リポジトリ→ステージにインデックスにファイル名のマッピング情報を記載　git add
+
+３：インデックスのファイル構成情報をもとにツリー１がリポジトリに作成し
+コミット１(構成：ファイル名、作成者、日付、コミットメッセージ)が作られる　git commit
+
+リポジトリには、圧縮ファイル、ツリー１、コミット１の３つのファイルが保存
+
+
+16
+新ファイルの追加分を保存する
+
+１：ワークツリー→リポジトリにファイルの中身を圧縮したファイルを保存
+※実際は文字列をハッシュ関数で暗号化した文字列がファイルになる
+
+２：リポジトリ→ステージにインデックスに今までのフファイルのマッピング情報が
+記載　git add
+
+３：インデックスのファイル構成情報をもとにツリー２がリポジトリに作成し
+コミット２(構成：ツリー２、親コミット１、作成者、日付、コミットメッセージ)が作られる　git commit
+親コミットがあるのは変更履歴をたどれるように
+
+
+ファイル内容を更新した場合
+
+１：ワークツリー→リポジトリにファイルの中身を変更したものの圧縮ファイルを保存
+※実際は文字列をハッシュ関数で暗号化した文字列がファイルになる
+
+２：リポジトリ→ステージにインデックスに今までのフファイルのマッピング情報が
+記載　git add
+
+３：インデックスのファイル構成情報をもとにツリー３がリポジトリに作成し
+コミット３(構成：ツリー３、親コミット２、作成者、日付、コミットメッセージ)が作られる　git commit
+親コミットがあるのは変更履歴をたどれるように
+
+まとめ
+・リポジトリには、圧縮ファイル、ツリー１、コミット１の３つのファイルが保存
+・コミットが親コミットを持つことで変更履歴をたどる
+・Gitの本質はデータを圧縮して、スナップショットで保存
+・Gitコマンドはデータ操作のコマンド
+
+
+18
+mkdir git_tutorial
+cd git_tutorial
+git init
+Initialized empty Git repository in C:/sadopj_workspace/Git/git_tutorial/.git/
+
+objects：リポジトリの本体
+config：設定ファイル
+
+19
+git clone <リポジトリ名>　クローン(コピー)作成
+リモートリポジトリのコピーがワークツリーに
+リポジトリもコピー
+
+
+20
+git add <ファイル名>
+git add .　　　　　　すべてのファイルをステージに保存
+
+21
+git commit
+git commit -m "<メッセージ>"　メッセージ付きで
+git commit -v　　変更内容が見れる
+
+コミットメッセージは分かりやすく
+簡単に書くとき→一行で簡潔に
+正式に書くとき→一行目：変更内容の要約、二行目：空行、三行目：変更理由
+
+
+22
+git status ファイル確認コマンド
+PS C:\sadopj_workspace\Git\git_tutorial> git status     
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   git_tutorial.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+PS C:\sadopj_workspace\Git\git_tutorial> git add . 
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   git_tutorial.html
+PS C:\sadopj_workspace\Git\git_tutorial> git commit
+[master 22d2dea] git statusコマンドを追記
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+nothing to commit, working tree clean
+PS C:\sadopj_workspace\Git\git_tutorial> 
+
+
+23
+変更差分を確認するコマンド diff difference
+git addする前
+git diff
+git diff <ファイル名>
+
+
+gitaddした後
+
+git diff --staged
+
+終了コマンドはq
+
+24
+変更履歴の確認
+git log
+
+git log oneline　一行で表示
+
+git log -p <ファイル名>
+
+git log -n <コミット数>
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git log       
+commit b83ce9a4c9807f76dec95b92c438f6f9096dfa49 (HEAD -> master)
+Author: miuraseina <s.miura@miracleave.co.jp>
+Date:   Tue Apr 14 11:40:48 2026 +0900
+
+    git diffを追記
+
+commit 22d2deab7c82d7137f9b76c7c8921ba7f630a6bc
+Author: miuraseina <s.miura@miracleave.co.jp>
+
+
+25
+ファイル削除
+git rm <ファイル名>
+git記録からファイルを消す
+git rm --cached <ファイル名>
+
+
+PS C:\sadopj_workspace\Git> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        2026/04/14     11:01                atom
+d-----        2026/04/14     11:09                git_clone
+d-----        2026/04/14     11:09                git_tutorial
+d-----        2026/04/13     17:06                セクション１
+d-----        2026/04/14     11:09                セクション２
+
+
+PS C:\sadopj_workspace\Git> cd git_tutorial
+PS C:\sadopj_workspace\Git\git_tutorial> git rm git_tutorial.html
+rm 'git_tutorial.html'
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        deleted:    git_tutorial.html
+
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+PS C:\sadopj_workspace\Git\git_tutorial> git reset HEAD git_tutorial.html
+Unstaged changes after reset:
+D       git_tutorial.html
+PS C:\sadopj_workspace\Git\git_tutorial> git checkout git_tutorial.html
+Updated 1 path from the index
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     11:56             69 git_tutorial.html
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+nothing to commit, working tree clean
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git rm --cached git_tutorial.html
+rm 'git_tutorial.html'
+PS C:\sadopj_workspace\Git\git_tutorial> ls        
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     11:56             69 git_tutorial.html
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        deleted:    git_tutorial.html
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        git_tutorial.html
+
+PS C:\sadopj_workspace\Git\git_tutorial> git reset HEAD git_tutorial.html 
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+nothing to commit, working tree clean
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+26
+ファイル移動の記録 ファイルの変更
+git mv <旧ファイル> <新ファイル>
+
+以下と同じコマンド
+mv <旧ファイル> <新ファイル>
+git rm <旧ファイル>
+git add <新ファイル>
+
+PS C:\sadopj_workspace\Git\git_tutorial> git mv git_tutorial.html index.html
+PS C:\sadopj_workspace\Git\git_tutorial> ls
+
+
+    ディレクトリ: C:\sadopj_workspace\Git\git_tutorial
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        2026/04/14     11:56             69 index.html
+
+
+PS C:\sadopj_workspace\Git\git_tutorial> git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        renamed:    git_tutorial.html -> index.html
+
+PS C:\sadopj_workspace\Git\git_tutorial>
+
+
+
+
+27
+gitにプッシュ→リモートリポジトリにローカルの内容をアップすること
+
+事前準備：リモートリポジトリを新規追加
+originという名前でURLのリモートリポジトリに登録
+git remote add origin <URL>
+
+originはgitの慣用句
+
+１：リモートリポジトリへ送信
+git push <リモート名> <ブランチ名>
+git push origin master
+
+
+パーソナルアクセストークン
+gitにpushする際にユーザー名とパーソナルアクセストークン(鍵)
+を使ってアカウント認証する
+次回以降git pushだけでプッシュできるようになる
+
+28
+rowファイル
+ブレイム：責任者、だれがいつ何を変更したのかが見れる
+ヒストリー：ファイルのコミット履歴を追える　
+
+
+29
+コマンドにエイリアス(別名)をつける
+→コマンド入力を短縮して楽していくため
+--global　PC内全体の設定を変更
+
+git config --global alias.<短縮コマンド> <通常コマンド>
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.br branch
+git config --global alias.co checkout
+
+
+30
+バージョン管理したくないファイル
+１：パスワード、機密情報のファイル
+２：チーム開発しないファイル
+
+git管理からの外し方
+.gitignore
+
+指定したファイルを除外する
+~~.html
+ルートディレクトリ
+/root.html
+ディレクトリ以下
+dir/
+/*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
